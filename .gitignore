@@ -1,4 +1,4 @@
-# Sanal ortam
+# Virtual environment
 venv/
 .venv/
 
@@ -6,12 +6,12 @@ venv/
 __pycache__/
 *.pyc
 
-# Ultralytics'in calisma sirasinda urettigi dosyalar
+# Files Ultralytics generates at runtime
 runs/
 *.cache
 
-# Uygulamanin kaydettigi ekran goruntuleri
-olcum_*.png
+# Screenshots saved by the app
+capture_*.png
 
 # Editor / IDE
 .vscode/

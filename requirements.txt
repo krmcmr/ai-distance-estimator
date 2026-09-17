@@ -1,9 +1,9 @@
-# 1) PyTorch'u once kur (CUDA surumunu ekran kartina gore sec):
-#      - RTX 50 serisi (Blackwell) : pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
-#      - RTX 20/30/40 serisi       : pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
-#      - GPU yoksa (CPU)           : pip install torch torchvision
+# 1) Install PyTorch first, matching your GPU's CUDA version:
+#      - RTX 50 series (Blackwell) : pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+#      - RTX 20/30/40 series       : pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#      - No GPU (CPU only)         : pip install torch torchvision
 #
-# 2) Sonra bu dosyadaki geri kalan paketleri kur:
+# 2) Then install the rest of the dependencies:
 #      pip install -r requirements.txt
 ultralytics
 opencv-python

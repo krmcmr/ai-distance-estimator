@@ -1,17 +1,17 @@
 # AI Distance Estimator
 
-Webcam görüntüsü üzerinden, bir **A4 kağıdını referans alarak** nesnelerin gerçek boyutlarını (cm) ölçen bir bilgisayarlı görü uygulaması. Kağıdın tespiti için özel olarak eğitilmiş bir **YOLOv8** modeli kullanılır.
+A computer vision app that measures the real-world size (in cm) of objects from a webcam feed, using an **A4 sheet of paper as a reference**. A purpose-trained **YOLOv8** model detects the paper.
 
-## Nasıl çalışır?
+## How it works
 
-1. **Tespit** — Eğitilmiş YOLOv8 modeli (`best.pt`), kamera görüntüsünde A4 kağıdını bulur.
-2. **Köşe bulma** — Tespit edilen alanın içinde kağıdın dört köşesi klasik görüntü işleme yöntemleriyle (Otsu eşikleme + kontur analizi) netleştirilir.
-3. **Perspektif düzeltme** — Kağıt, gerçek A4 oranlarına (210 × 297 mm) sahip düz bir görüntüye dönüştürülür. Böylece kamera açısı ne olursa olsun her piksel sabit bir mm değerine karşılık gelir.
-4. **Ölçüm** — Kağıdın üzerine konan nesneler bu düzleştirilmiş görüntüde tespit edilir; piksel boyutları, bilinen mm/piksel oranı kullanılarak gerçek boyuta çevrilir.
+1. **Detection** — The trained YOLOv8 model (`best.pt`) locates the A4 sheet in the camera feed.
+2. **Corner detection** — Inside the detected region, the sheet's four corners are refined with classic image processing (Otsu thresholding + contour analysis).
+3. **Perspective correction** — The sheet is warped into a flat image with real A4 proportions (210 × 297 mm), so every pixel maps to a fixed mm value regardless of the camera angle.
+4. **Measurement** — Objects placed on the sheet are detected in this flattened image; their pixel size is converted to real size using the known mm/pixel ratio.
 
-## Kurulum
+## Setup
 
-**Gereksinimler:** Python 3.10+, (opsiyonel ama önerilir) CUDA destekli bir NVIDIA ekran kartı.
+**Requirements:** Python 3.10+, an NVIDIA GPU with CUDA support (optional but recommended).
 
 ```bash
 git clone https://github.com/krmcmr/ai-distance-estimator.git
@@ -22,59 +22,59 @@ venv\Scripts\activate          # Windows
 # source venv/bin/activate     # macOS / Linux
 ```
 
-PyTorch'u ekran kartınıza uygun CUDA sürümüyle kurun (bkz. [requirements.txt](requirements.txt) içindeki notlar), ardından geri kalan paketleri kurun:
+Install PyTorch matching your GPU's CUDA version (see the notes in [requirements.txt](requirements.txt)), then install the rest:
 
 ```bash
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
 pip install -r requirements.txt
 ```
 
-## Kullanım
+## Usage
 
-Eğitilmiş `best.pt` modelini proje kök dizinine yerleştirin, ardından:
+Place the trained `best.pt` model in the project root, then run:
 
 ```bash
-python olcum.py
+python measure.py
 ```
 
-| Argüman | Açıklama | Varsayılan |
+| Argument | Description | Default |
 |---|---|---|
-| `--model` | Kullanılacak model dosyası | `best.pt` |
-| `--kamera` | Kamera indeksi | `0` |
-| `--conf` | Tespit güven eşiği | `0.5` |
+| `--model` | Model file to use | `best.pt` |
+| `--camera` | Camera index | `0` |
+| `--conf` | Detection confidence threshold | `0.5` |
 
-**Tuşlar:** `q` çıkış, `s` ekran görüntüsü kaydet.
+**Keys:** `q` to quit, `s` to save a screenshot.
 
-Uygulama iki pencere açar: kamera görüntüsü üzerinde tespit ve ölçüm sonuçları, ve kağıdın perspektifi düzeltilmiş hâli.
+The app opens two windows: the camera feed with detections and measurements overlaid, and the perspective-corrected view of the paper.
 
-## Proje yapısı
+## Project structure
 
 ```
 ai-distance-estimator/
-├── olcum.py              # Ana uygulama: tespit, perspektif düzeltme, ölçüm
-├── requirements.txt       # Python bağımlılıkları
-├── best.pt                 # Eğitilmiş YOLOv8 modeli (A4 tespiti)
+├── measure.py             # Main app: detection, perspective correction, measurement
+├── requirements.txt       # Python dependencies
+├── best.pt                # Trained YOLOv8 model (A4 detection)
 └── docs/
-    └── model-egitimi.md   # Modelin nasıl eğitildiğine dair adımlar
+    └── model-training.md  # How the model was trained
 ```
 
-## Model ve veri seti
+## Model and dataset
 
-- Mimari: **YOLOv8n**
-- Veri seti: [A4 Detection – Roboflow Universe](https://universe.roboflow.com/greg-sun/a4-detection)
-- Eğitim adımları için bkz. [docs/model-egitimi.md](docs/model-egitimi.md)
+- Architecture: **YOLOv8n**
+- Dataset: [A4 Detection – Roboflow Universe](https://universe.roboflow.com/greg-sun/a4-detection)
+- Training steps: see [docs/model-training.md](docs/model-training.md)
 
-## Sınırlamalar
+## Limitations
 
-- Ölçülecek nesnenin **kağıdın üzerinde** olması gerekir; kağıdın dışına taşan kısımlar ölçüme dahil edilmez.
-- Nesnenin, kağıttan belirgin şekilde **daha koyu veya renkli** olması gerekir; beyaza yakın nesneler kağıttan ayırt edilemeyebilir.
-- Kağıdın dört köşesinin de görüntüde net görünmesi, en doğru ölçüm için kameranın kağıda mümkün olduğunca dik açıyla bakması gerekir.
+- The object being measured must be **on the sheet**; anything hanging off the edge is not measured.
+- The object needs to be **noticeably darker or more saturated** than the paper; near-white objects may not be distinguishable from it.
+- For the most accurate measurement, all four corners of the sheet should be visible and the camera should look at the sheet as close to straight-down as possible.
 
-## Katkıda Bulunanlar
+## Contributors
 
 - [Kerem Çamur](https://github.com/krmcmr)
 - [Taylan Tuna Aktaş](https://github.com/TaylannAktas)
 
-## Lisans
+## License
 
-Bu proje [MIT lisansı](LICENSE) ile lisanslanmıştır.
+This project is licensed under the [MIT License](LICENSE).
