@@ -1,0 +1,18 @@
+# Sanal ortam
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Ultralytics'in calisma sirasinda urettigi dosyalar
+runs/
+*.cache
+
+# Uygulamanin kaydettigi ekran goruntuleri
+olcum_*.png
+
+# Editor / IDE
+.vscode/
+.idea/
