@@ -12,7 +12,7 @@ ultralytics.checks()
 !pip install roboflow
 from roboflow import Roboflow
 rf = Roboflow(api_key="SENIN_API_ANAHTARIN")
-project = rf.workspace("workspace-adi").project("proje-adi")
+project = rf.workspace("greg-sun").project("a4-detection")
 version = project.version(1)
 dataset = version.download("yolov8")
 ```
